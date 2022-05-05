@@ -157,9 +157,29 @@ def memFuncKnapSack(capacity, weight, value, size):
     print("PlaceHolder 1B")
     return 0, 0, 0
 
+
 def spaceEfficientKnapSack(capacity, weight, value, size):
+    # Global variable for hash table.
+    HashTable = [[] for i in range(capacity)]
+    print("Capacity size: ", capacity)
+    # Keep track of our number of operations.
+    numOps = 0
+
+    # Insert values into hash table.
+    for i in range(capacity - 1):
+        #print("Value: ", value[i])
+        hash_key = spaceEfficientHelper(weight[i], HashTable)
+        HashTable[hash_key].append(value[i])
+
+    for i in range(capacity - 1):
+        print(HashTable[i])
+
+
     print("PlaceHolder 1C")
     return 0, 0, 0, 0
+
+def spaceEfficientHelper(keyvalue, HashTable):
+    return keyvalue % len(HashTable)
 
 def greedyApproach(capacity, weight, value, size):
     print("PlaceHolder 2A")

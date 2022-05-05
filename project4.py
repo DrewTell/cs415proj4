@@ -1,3 +1,7 @@
+memWeight = []
+memValues = []
+memResult = []
+
 def main():
 
     filesToOpen = fileToRead()
@@ -28,8 +32,25 @@ def task1A(sackCapacity, weightList, valueList, listSize):
     print("(1a) Traditional Dynamic Programming Total Basic Ops:", ansTask1A[2], '\n')
 
 def task1B(sackCapacity, weightList, valueList, listSize):
+    #Memory functions utilize global variables to utilize the recurrence relationships without extra computations
+    #on redundent calculations
     
-    ansTask1B = memFuncKnapSack(sackCapacity, weightList, valueList, listSize)
+    global memWeight, memValues, memResult
+    memWeight = [0]
+    memWeight.extend(weightList)
+    memValues = [0]
+    memValues.extend(valueList)
+    memResult = [[-1 for spanOfCapacity in range(sackCapacity + 1)] for entriesAMT in range(listSize + 1)]
+
+    for entryX in range(sackCapacity + 1):
+        memResult[0][entryX] = 0
+    for entryY in range(listSize + 1):
+        memResult[entryY][0] = 0
+
+    ansTask1B = memFuncKnapSack(listSize, sackCapacity)
+    print(memWeight)
+    print(memValues)
+    print(memResult)
     print("(1b) Memory-function Dynamic Programming Optimal value:", ansTask1B[0])
     print("(1b) Memory-function Dynamic Programming Optimal subset:", ansTask1B[1])
     print("(1b) Memory-function Dynamic Programming Total Basic Ops:", ansTask1B[2], '\n')
@@ -68,14 +89,12 @@ def fileToRead():
     fileValue = nameGeneric + "_v.txt"
     return fileCap, fileWeight, fileValue
 
-
 def capacity(fileName):
     # capacity opens the _w.txt file to read the first value for the total weight that can be held
     fileData = open(fileName, 'r')
     capacity = fileData.read()
     fileData.close()
     return int(capacity)
-
 
 def fileParser(fileName):
     # creates a list of values from a text file
@@ -85,8 +104,6 @@ def fileParser(fileName):
         weightSet.append(int(x.rstrip()))
     fileData.close()
     return weightSet
-
-
 
 def traditionalKnapSack(capacity, weight, value, size):
     #table creation for a 2 dimensional table where capacity + 1 will create x cells for each integer up to capacity
@@ -151,35 +168,26 @@ def traditionalKnapSack(capacity, weight, value, size):
     itemIndexes.reverse()
 
 
-    return table[size][capacity], itemIndexes, numOfOps   # returning the maximum value of knapsack and the index of items in the table where the first item is item 1    
+    return maxValue, itemIndexes, numOfOps   # returning the maximum value of knapsack and the index of items in the table where the first item is item 1    
 
-def memFuncKnapSack(capacity, weight, value, size):
-    print("PlaceHolder 1B")
-    return 0, 0, 0
+def memFuncKnapSack(listSize, sackCapacity):
+    #needed to not reference local copies of the variable
 
+    global memWeight, memValues, memResult 
+    tempValue = 0
+    if memResult[listSize][sackCapacity] < 0:
+
+        if sackCapacity < memWeight[listSize]:
+            tempValue = memFuncKnapSack(listSize - 1, sackCapacity)[0]
+        else:
+            tempValue = max(memFuncKnapSack(listSize - 1, sackCapacity)[0], memValues[listSize] + memFuncKnapSack(listSize - 1, sackCapacity - memWeight[listSize])[0])
+
+    memResult[listSize][sackCapacity] = tempValue
+    return memResult[listSize][sackCapacity], 0, 0
 
 def spaceEfficientKnapSack(capacity, weight, value, size):
-    # Global variable for hash table.
-    HashTable = [[] for i in range(capacity)]
-    print("Capacity size: ", capacity)
-    # Keep track of our number of operations.
-    numOps = 0
-
-    # Insert values into hash table.
-    for i in range(capacity - 1):
-        #print("Value: ", value[i])
-        hash_key = spaceEfficientHelper(weight[i], HashTable)
-        HashTable[hash_key].append(value[i])
-
-    for i in range(capacity - 1):
-        print(HashTable[i])
-
-
     print("PlaceHolder 1C")
     return 0, 0, 0, 0
-
-def spaceEfficientHelper(keyvalue, HashTable):
-    return keyvalue % len(HashTable)
 
 def greedyApproach(capacity, weight, value, size):
     print("PlaceHolder 2A")

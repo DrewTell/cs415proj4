@@ -20,9 +20,9 @@ def main():
 
     task1A(sackCapacity, weightList, valueList, listSize)
     task1B(sackCapacity, weightList, valueList, listSize)
-    task1C(sackCapacity, weightList, valueList, listSize)
-    task2A(sackCapacity, weightList, valueList, listSize)
-    task2B(sackCapacity, weightList, valueList, listSize)
+    # task1C(sackCapacity, weightList, valueList, listSize)
+    # task2A(sackCapacity, weightList, valueList, listSize)
+    # task2B(sackCapacity, weightList, valueList, listSize)
 
 def task1A(sackCapacity, weightList, valueList, listSize):
     
@@ -40,19 +40,18 @@ def task1B(sackCapacity, weightList, valueList, listSize):
     memWeight.extend(weightList)
     memValues = [0]
     memValues.extend(valueList)
+
     memResult = [[-1 for spanOfCapacity in range(sackCapacity + 1)] for entriesAMT in range(listSize + 1)]
 
     for entryX in range(sackCapacity + 1):
         memResult[0][entryX] = 0
     for entryY in range(listSize + 1):
         memResult[entryY][0] = 0
-
+    # print("memproto: ", memProto(listSize, sackCapacity))
+    # print(memResult)
     ansTask1B = memFuncKnapSack(listSize, sackCapacity)
-    print(memWeight)
-    print(memValues)
-    print(memResult)
     print("(1b) Memory-function Dynamic Programming Optimal value:", ansTask1B[0])
-    print("(1b) Memory-function Dynamic Programming Optimal subset:", ansTask1B[1])
+    print("(1b) Memory-function Dynamic Programming Optimal subset:", memFuncIndexes(listSize, sackCapacity))
     print("(1b) Memory-function Dynamic Programming Total Basic Ops:", ansTask1B[2], '\n')
 
 def task1C(sackCapacity, weightList, valueList, listSize):
@@ -172,18 +171,41 @@ def traditionalKnapSack(capacity, weight, value, size):
 
 def memFuncKnapSack(listSize, sackCapacity):
     #needed to not reference local copies of the variable
-
+    numOfOps = 0
     global memWeight, memValues, memResult 
     tempValue = 0
     if memResult[listSize][sackCapacity] < 0:
-
         if sackCapacity < memWeight[listSize]:
             tempValue = memFuncKnapSack(listSize - 1, sackCapacity)[0]
         else:
             tempValue = max(memFuncKnapSack(listSize - 1, sackCapacity)[0], memValues[listSize] + memFuncKnapSack(listSize - 1, sackCapacity - memWeight[listSize])[0])
+        memResult[listSize][sackCapacity] = tempValue
 
-    memResult[listSize][sackCapacity] = tempValue
     return memResult[listSize][sackCapacity], 0, 0
+
+def memFuncIndexes(listSize, sackCapacity):
+    global memWeight, memValues, memResult 
+    numOfOps = 0
+    maxValue = tempMaxValue = memResult[listSize][sackCapacity]
+    tempCapacity = sackCapacity
+    itemIndexes = []
+    numOfOps += 3
+    for i in range(listSize, 0, -1):
+        if tempMaxValue <= 0:
+            numOfOps += 1
+            break
+        elif tempMaxValue == memResult[i - 1][tempCapacity]:
+            numOfOps += 1
+            continue
+        else:
+            itemIndexes.append(i)
+            tempMaxValue -= memValues[i]
+            tempCapacity -= memWeight[i]
+            #setting values
+            numOfOps += 3
+
+    itemIndexes.reverse()
+    return itemIndexes
 
 def spaceEfficientKnapSack(capacity, weight, value, size):
     # Global variable for hash table.
@@ -193,13 +215,13 @@ def spaceEfficientKnapSack(capacity, weight, value, size):
     numOps = 0
 
     # Insert values into hash table.
-    for i in range(capacity - 1):
-        #print("Value: ", value[i])
-        hash_key = spaceEfficientHelper(weight[i], HashTable)
-        HashTable[hash_key].append(value[i])
+    # for i in range(capacity - 1):
+    #     #print("Value: ", value[i])
+    #     hash_key = spaceEfficientHelper(weight[i], HashTable)
+    #     HashTable[hash_key].append(value[i])
 
-    for i in range(capacity - 1):
-        print(HashTable[i])
+    # for i in range(capacity - 1):
+    #     print(HashTable[i])
 
 
     print("PlaceHolder 1C")

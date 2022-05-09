@@ -1,7 +1,8 @@
+
 memWeight = []
 memValues = []
 memResult = []
-
+memCounter = 0
 def main():
 
     filesToOpen = fileToRead()
@@ -35,7 +36,7 @@ def task1B(sackCapacity, weightList, valueList, listSize):
     #Memory functions utilize global variables to utilize the recurrence relationships without extra computations
     #on redundent calculations
     
-    global memWeight, memValues, memResult
+    global memWeight, memValues, memResult, memCounter
     memWeight = [0]
     memWeight.extend(weightList)
     memValues = [0]
@@ -47,12 +48,11 @@ def task1B(sackCapacity, weightList, valueList, listSize):
         memResult[0][entryX] = 0
     for entryY in range(listSize + 1):
         memResult[entryY][0] = 0
-    # print("memproto: ", memProto(listSize, sackCapacity))
-    # print(memResult)
+
     ansTask1B = memFuncKnapSack(listSize, sackCapacity)
-    print("(1b) Memory-function Dynamic Programming Optimal value:", ansTask1B[0])
+    print("(1b) Memory-function Dynamic Programming Optimal value:", ansTask1B)
     print("(1b) Memory-function Dynamic Programming Optimal subset:", memFuncIndexes(listSize, sackCapacity))
-    print("(1b) Memory-function Dynamic Programming Total Basic Ops:", ansTask1B[2], '\n')
+    print("(1b) Memory-function Dynamic Programming Total Basic Ops:", memCounter, '\n')
 
 def task1C(sackCapacity, weightList, valueList, listSize):
     
@@ -112,24 +112,17 @@ def traditionalKnapSack(capacity, weight, value, size):
     table = [[0 for spanOfCapacity in range(capacity + 1)] for entriesAMT in range(size + 1)]
     
 
-    numOfOps = (capacity + 1) * (size + 1)
-
     for x in range(size + 1):                           
         for y in range(capacity + 1):                   
-            
             if x == 0 or y == 0:
                 table[x][y] = 0
-                #setting value
-                numOfOps += 1
-
+                numOfOps = numOfOps + 1
             elif weight[x - 1] <= y:
                 table[x][y] = max(value[x - 1] + table[x - 1][y - weight[x - 1]], table[x - 1][y])
                 #comparison
-                numOfOps += 1
+                numOfOps = numOfOps + 1
             else:
                 table[x][y] = table[x - 1][y]
-                #setting Value
-                numOfOps += 1
 
     #After iterating through the whole table the best values will trickle down to the last cell of the table
     #located at (capacity, size) where capacity is the max hold limit in weight and size is the amt of entries
@@ -157,12 +150,9 @@ def traditionalKnapSack(capacity, weight, value, size):
             numOfOps += 1
             continue
         else:
-            # resultSet[i] = [weight[i-1], value[i-1]]
             itemIndexes.append(i)
             tempMaxValue -= value[i-1]
             tempCapacity -= weight[i-1]
-            #setting values
-            numOfOps += 3
 
     itemIndexes.reverse()
 
@@ -171,38 +161,39 @@ def traditionalKnapSack(capacity, weight, value, size):
 
 def memFuncKnapSack(listSize, sackCapacity):
     #needed to not reference local copies of the variable
-    numOfOps = 0
-    global memWeight, memValues, memResult 
+    global memWeight, memValues, memResult, memCounter
     tempValue = 0
-    if memResult[listSize][sackCapacity] < 0:
-        if sackCapacity < memWeight[listSize]:
-            tempValue = memFuncKnapSack(listSize - 1, sackCapacity)[0]
-        else:
-            tempValue = max(memFuncKnapSack(listSize - 1, sackCapacity)[0], memValues[listSize] + memFuncKnapSack(listSize - 1, sackCapacity - memWeight[listSize])[0])
-        memResult[listSize][sackCapacity] = tempValue
 
-    return memResult[listSize][sackCapacity], 0, 0
+    if memResult[listSize][sackCapacity] < 0:
+        memCounter = memCounter + 1
+        if sackCapacity < memWeight[listSize]:
+            #conditional comparison
+            memCounter = memCounter + 1
+            tempValue = memFuncKnapSack(listSize - 1, sackCapacity)
+        else:
+            #max comparison
+            memCounter = memCounter + 1
+            tempValue = max(memFuncKnapSack(listSize - 1, sackCapacity), memValues[listSize] + memFuncKnapSack(listSize - 1, sackCapacity - memWeight[listSize]))
+        memResult[listSize][sackCapacity] = tempValue
+    return memResult[listSize][sackCapacity]
 
 def memFuncIndexes(listSize, sackCapacity):
-    global memWeight, memValues, memResult 
+    global memWeight, memValues, memResult, memCounter
     numOfOps = 0
     maxValue = tempMaxValue = memResult[listSize][sackCapacity]
     tempCapacity = sackCapacity
     itemIndexes = []
-    numOfOps += 3
     for i in range(listSize, 0, -1):
         if tempMaxValue <= 0:
-            numOfOps += 1
+            memCounter += 1
             break
         elif tempMaxValue == memResult[i - 1][tempCapacity]:
-            numOfOps += 1
+            memCounter += 1
             continue
         else:
             itemIndexes.append(i)
             tempMaxValue -= memValues[i]
             tempCapacity -= memWeight[i]
-            #setting values
-            numOfOps += 3
 
     itemIndexes.reverse()
     return itemIndexes

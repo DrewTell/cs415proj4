@@ -1,4 +1,5 @@
 
+
 memWeight = []
 memValues = []
 memResult = []
@@ -20,9 +21,9 @@ def main():
     print("Knapsack capacity =", sackCapacity, "Total number of items =", listSize, "\n")
 
     task1A(sackCapacity, weightList, valueList, listSize)
-    task1B(sackCapacity, weightList, valueList, listSize)
+    # task1B(sackCapacity, weightList, valueList, listSize)
     # task1C(sackCapacity, weightList, valueList, listSize)
-    # task2A(sackCapacity, weightList, valueList, listSize)
+    task2A(sackCapacity, weightList, valueList, listSize)
     # task2B(sackCapacity, weightList, valueList, listSize)
 
 def task1A(sackCapacity, weightList, valueList, listSize):
@@ -221,9 +222,67 @@ def spaceEfficientKnapSack(capacity, weight, value, size):
 def spaceEfficientHelper(keyvalue, HashTable):
     return keyvalue % len(HashTable)
 
-def greedyApproach(capacity, weight, value, size):
+def greedyApproach(capacityVal, weightSet, valueSet, sizeVal):
+    #zip is a python function that combines two arrays
+    #into a tuple
+    valueToWeightRatio = [value / weight for value, weight in zip(valueSet, weightSet)]
+    print(valueToWeightRatio)
+    greedyMergeSortC(valueToWeightRatio)
+    print(valueToWeightRatio)
+    
     print("PlaceHolder 2A")
     return 0, 0, 0, 0
+
+def greedyMergeSort(array):
+    if len(array) > 1:
+        middle = len(array) // 2
+        Left = array[:middle]
+        Right = array[middle:]
+        greedyMergeSort(Left)
+        greedyMergeSort(Right)
+        i = j = k = 0
+        while i < len(Left) and j < len(Right):
+            if Left[i] > Right[j]:
+                array[k] = Left[i]
+                i = i + 1
+            else:
+                array[k] = Right[j]
+                j = j + 1
+            k = k + 1
+        while i < len(Left):
+            array[k] = Left[i]
+            i = i + 1
+            k = k + 1
+        while j < len(Right):
+            array[k] = Right[j]
+            j = j + 1
+            k = k + 1
+
+def greedyMergeSortC(array):
+    if len(array) > 1:
+        middle = len(array) // 2
+        Left = array[:middle]
+        Right = array[middle:]
+        greedyMergeSort(Left)
+        greedyMergeSort(Right)
+        i = j = k = 0
+        while i < len(Left) and j < len(Right):
+            if Left[i] > Right[j]:
+                array[k] = Left[i]
+                i = i + 1
+            else:
+                array[k] = Right[j]
+                j = j + 1
+            k = k + 1
+        while i < len(Left):
+            array[k] = Left[i]
+            i = i + 1
+            k = k + 1
+        while j < len(Right):
+            array[k] = Right[j]
+            j = j + 1
+            k = k + 1
+
 
 def heapBased(capacity, weight, value, size):
     print("PlaceHolder 2B")
@@ -232,3 +291,4 @@ def heapBased(capacity, weight, value, size):
 
 if __name__ == "__main__":
     main()
+

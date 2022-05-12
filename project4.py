@@ -226,63 +226,66 @@ def greedyApproach(capacityVal, weightSet, valueSet, sizeVal):
     #zip is a python function that combines two arrays
     #into a tuple
     valueToWeightRatio = [value / weight for value, weight in zip(valueSet, weightSet)]
-    print(valueToWeightRatio)
-    greedyMergeSortC(valueToWeightRatio)
-    print(valueToWeightRatio)
+    itemIndex = []
+    for i in range(sizeVal):
+        itemIndex.append(i + 1)
+
+    greedyMergeSortA(valueToWeightRatio, itemIndex)
+    # valueToWeightRatio.extend([0])
+    # valueSet.extend([0])
+    # weightSet.extend([0])
+
+    tempCapacity = capacityVal
+    totalValue = stopIndex = 0
+    for i in range(sizeVal):
+        currentWT = weightSet[i]
+        currentValue = valueSet[i]
+        if tempCapacity - currentWT >= 0:
+            tempCapacity = tempCapacity - currentWT
+            totalValue = totalValue + currentValue
+            stopIndex = i
+        else:
+            break 
+    itemIndex = itemIndex[:stopIndex + 1]
+
+    return totalValue, itemIndex, 0
+
+def greedyMergeSortA(valToWeightArray, indexArray):
+    if len(valToWeightArray) > 1:
+        middle = len(valToWeightArray) // 2
+
+        #Left and right array of ratios
+        Left = valToWeightArray[:middle]
+        Right = valToWeightArray[middle:]
+        
+        valueLeft = indexArray[:middle]
+        valueRight = indexArray[middle:]
     
-    print("PlaceHolder 2A")
-    return 0, 0, 0, 0
+        greedyMergeSortA(Left, valueLeft) 
+        greedyMergeSortA(Right, valueRight)
 
-def greedyMergeSort(array):
-    if len(array) > 1:
-        middle = len(array) // 2
-        Left = array[:middle]
-        Right = array[middle:]
-        greedyMergeSort(Left)
-        greedyMergeSort(Right)
         i = j = k = 0
+
         while i < len(Left) and j < len(Right):
             if Left[i] > Right[j]:
-                array[k] = Left[i]
+                valToWeightArray[k] = Left[i]
+                indexArray[k] = valueLeft[i]
                 i = i + 1
             else:
-                array[k] = Right[j]
+                valToWeightArray[k] = Right[j]
+                indexArray[k] = valueRight[j]
                 j = j + 1
             k = k + 1
         while i < len(Left):
-            array[k] = Left[i]
+            valToWeightArray[k] = Left[i]
+            indexArray[k] = valueLeft[i]
             i = i + 1
             k = k + 1
         while j < len(Right):
-            array[k] = Right[j]
+            valToWeightArray[k] = Right[j]
+            indexArray[k] = valueRight[j]        
             j = j + 1
             k = k + 1
-
-def greedyMergeSortC(array):
-    if len(array) > 1:
-        middle = len(array) // 2
-        Left = array[:middle]
-        Right = array[middle:]
-        greedyMergeSort(Left)
-        greedyMergeSort(Right)
-        i = j = k = 0
-        while i < len(Left) and j < len(Right):
-            if Left[i] > Right[j]:
-                array[k] = Left[i]
-                i = i + 1
-            else:
-                array[k] = Right[j]
-                j = j + 1
-            k = k + 1
-        while i < len(Left):
-            array[k] = Left[i]
-            i = i + 1
-            k = k + 1
-        while j < len(Right):
-            array[k] = Right[j]
-            j = j + 1
-            k = k + 1
-
 
 def heapBased(capacity, weight, value, size):
     print("PlaceHolder 2B")
@@ -291,4 +294,3 @@ def heapBased(capacity, weight, value, size):
 
 if __name__ == "__main__":
     main()
-

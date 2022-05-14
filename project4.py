@@ -235,15 +235,12 @@ def greedyApproach(capacityVal, weightSet, valueSet, sizeVal):
         itemIndex.append(i + 1)
 
     greedyMergeSortA(valueToWeightRatio, itemIndex)
-    # valueToWeightRatio.extend([0])
-    # valueSet.extend([0])
-    # weightSet.extend([0])
-
     tempCapacity = capacityVal
     totalValue = stopIndex = 0
+
     for i in range(sizeVal):
-        currentWT = weightSet[i]
-        currentValue = valueSet[i]
+        currentWT = weightSet[itemIndex[i] - 1]
+        currentValue = valueSet[itemIndex[i] - 1]
         if tempCapacity - currentWT >= 0:
             tempCapacity = tempCapacity - currentWT
             totalValue = totalValue + currentValue
@@ -251,7 +248,6 @@ def greedyApproach(capacityVal, weightSet, valueSet, sizeVal):
         else:
             break 
     itemIndex = itemIndex[:stopIndex + 1]
-
     return totalValue, itemIndex, 0
 
 def greedyMergeSortA(valToWeightArray, indexArray):
@@ -311,6 +307,7 @@ def heapBased(capacity, weight, value, size):
             stopIndex = i
         else:
             break 
+
     returnArray = []
     for i in range(stopIndex + 1):
         returnArray.append(objectArr[i].get_data()[0])

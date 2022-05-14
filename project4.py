@@ -173,7 +173,6 @@ def spaceEfficientKnapSack(capacity, weight, value, size):
     # Variables
     numOps = 0
 
-<<<<<<< Updated upstream
     # Insert values into hash table.
     for i in range(capacity - 1):
         #print("Value: ", value[i])
@@ -183,12 +182,10 @@ def spaceEfficientKnapSack(capacity, weight, value, size):
     for i in range(capacity - 1):
         print(HashTable[i])
 
-=======
     # Implement hash table with values.
     for i in range(capacity - 1):
         insert(HashTable, weight[i], value[i])
     
->>>>>>> Stashed changes
 
     print("PlaceHolder 1C")
     return 0, 0, 0, 0
@@ -197,11 +194,10 @@ def spaceEfficientKnapSack(capacity, weight, value, size):
 def Hashing(keyvalue):
     return keyvalue % len(HashTable)
 
-<<<<<<< Updated upstream
 def greedyApproach(capacity, weight, value, size):
     print("PlaceHolder 2A")
     return 0, 0, 0, 0
-=======
+
 # Insert Function to add values to the hash table
 def insert(Hashtable, keyvalue, value):
     hash_key = Hashing(keyvalue)
@@ -271,7 +267,6 @@ def greedyMergeSortA(valToWeightArray, indexArray):
             indexArray[k] = valueRight[j]        
             j = j + 1
             k = k + 1
->>>>>>> Stashed changes
 
 def heapBased(capacity, weight, value, size):
     print("PlaceHolder 2B")

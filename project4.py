@@ -1,3 +1,13 @@
+<<<<<<< Updated upstream
+=======
+
+
+memWeight = []
+memValues = []
+memResult = []
+memCounter = 0
+
+>>>>>>> Stashed changes
 def main():
 
     filesToOpen = fileToRead()
@@ -158,13 +168,12 @@ def memFuncKnapSack(capacity, weight, value, size):
     return 0, 0, 0
 
 
+HashTable = [[] for _ in range(10)]
 def spaceEfficientKnapSack(capacity, weight, value, size):
-    # Global variable for hash table.
-    HashTable = [[] for i in range(capacity)]
-    print("Capacity size: ", capacity)
-    # Keep track of our number of operations.
+    # Variables
     numOps = 0
 
+<<<<<<< Updated upstream
     # Insert values into hash table.
     for i in range(capacity - 1):
         #print("Value: ", value[i])
@@ -174,16 +183,95 @@ def spaceEfficientKnapSack(capacity, weight, value, size):
     for i in range(capacity - 1):
         print(HashTable[i])
 
+=======
+    # Implement hash table with values.
+    for i in range(capacity - 1):
+        insert(HashTable, weight[i], value[i])
+    
+>>>>>>> Stashed changes
 
     print("PlaceHolder 1C")
     return 0, 0, 0, 0
 
-def spaceEfficientHelper(keyvalue, HashTable):
+# Hashing function to return the key for every value.
+def Hashing(keyvalue):
     return keyvalue % len(HashTable)
 
+<<<<<<< Updated upstream
 def greedyApproach(capacity, weight, value, size):
     print("PlaceHolder 2A")
     return 0, 0, 0, 0
+=======
+# Insert Function to add values to the hash table
+def insert(Hashtable, keyvalue, value):
+    hash_key = Hashing(keyvalue)
+    Hashtable[hash_key].append(value)
+
+def greedyApproach(capacityVal, weightSet, valueSet, sizeVal):
+    #zip is a python function that combines two arrays
+    #into a tuple
+    valueToWeightRatio = [value / weight for value, weight in zip(valueSet, weightSet)]
+    itemIndex = []
+    for i in range(sizeVal):
+        itemIndex.append(i + 1)
+
+    greedyMergeSortA(valueToWeightRatio, itemIndex)
+    # valueToWeightRatio.extend([0])
+    # valueSet.extend([0])
+    # weightSet.extend([0])
+
+    tempCapacity = capacityVal
+    totalValue = stopIndex = 0
+    for i in range(sizeVal):
+        currentWT = weightSet[i]
+        currentValue = valueSet[i]
+        if tempCapacity - currentWT >= 0:
+            tempCapacity = tempCapacity - currentWT
+            totalValue = totalValue + currentValue
+            stopIndex = i
+        else:
+            break 
+    itemIndex = itemIndex[:stopIndex + 1]
+
+    return totalValue, itemIndex, 0
+
+def greedyMergeSortA(valToWeightArray, indexArray):
+    if len(valToWeightArray) > 1:
+        middle = len(valToWeightArray) // 2
+
+        #Left and right array of ratios
+        Left = valToWeightArray[:middle]
+        Right = valToWeightArray[middle:]
+        
+        valueLeft = indexArray[:middle]
+        valueRight = indexArray[middle:]
+    
+        greedyMergeSortA(Left, valueLeft) 
+        greedyMergeSortA(Right, valueRight)
+
+        i = j = k = 0
+
+        while i < len(Left) and j < len(Right):
+            if Left[i] > Right[j]:
+                valToWeightArray[k] = Left[i]
+                indexArray[k] = valueLeft[i]
+                i = i + 1
+            else:
+                valToWeightArray[k] = Right[j]
+                indexArray[k] = valueRight[j]
+                j = j + 1
+            k = k + 1
+        while i < len(Left):
+            valToWeightArray[k] = Left[i]
+            indexArray[k] = valueLeft[i]
+            i = i + 1
+            k = k + 1
+        while j < len(Right):
+            valToWeightArray[k] = Right[j]
+            indexArray[k] = valueRight[j]        
+            j = j + 1
+            k = k + 1
+>>>>>>> Stashed changes
 
 def heapBased(capacity, weight, value, size):
     print("PlaceHolder 2B")

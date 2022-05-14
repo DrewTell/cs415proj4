@@ -22,7 +22,7 @@ def main():
 
     task1A(sackCapacity, weightList, valueList, listSize)
     # task1B(sackCapacity, weightList, valueList, listSize)
-    # task1C(sackCapacity, weightList, valueList, listSize)
+    task1C(sackCapacity, weightList, valueList, listSize)
     task2A(sackCapacity, weightList, valueList, listSize)
     task2B(sackCapacity, weightList, valueList, listSize)
 
@@ -202,19 +202,55 @@ def memFuncIndexes(listSize, sackCapacity):
 
 
 #Global Variable for spaceEfficientKnapSack
-HashTable = [[] for _ in range(10)]
-
+HashTable = [[] for _ in range(50)]
+memo = {}
 def spaceEfficientKnapSack(capacity, weight, value, size):
-    # Variables
-    numOps = 0
+    if size == 0 or capacity == 0:
+        return 0
 
-    # Implement hash table with values.
-    for i in range(capacity - 1):
-        insert(HashTable, weight[i], value[i])
-    
+    # if weight of the nth item is more than the weight
+    # available in the knapsack the skip it
+    if (weight[size - 1] > capacity):
+        return spaceEfficientKnapSack(capacity, weight, value, size - 1)
 
-    print("PlaceHolder 1C")
+    # Check if we already have an answer to the sunproblem
+    if (capacity, size) in memo:
+        return memo[(capacity, size)]
+
+    # find value of the knapsack when the nth item is picked
+    value_picked = value[size - 1] + spaceEfficientKnapSack(capacity - weight[size - 1], weight, value, size - 1)
+
+    # find value of the knapsack when the nth item is not picked
+    value_notpicked = spaceEfficientKnapSack(capacity, weight, value, size - 1)
+
+    # return the maxmimum of both the cases
+    # when nth item is picked and not picked
+    value_max = max(value_picked, value_notpicked)
+
+    # store the optimal answer of the subproblem
+    memo[(capacity, size)] = value_max
+
+    print("Max value: ", value_max)
     return 0, 0, 0, 0
+
+    
+    #return value_max
+
+    # # Variables
+    # numOps = 0
+    
+    # # Create an item and store it in a list.
+    # objectArr = []
+    # for index in range(size):
+    #     tempItem = item(index + 1, value[index], weight[index])
+    #     objectArr.append(tempItem)
+
+    # # Implement hash table with values.
+    # for i in range(item):
+    #     insert(HashTable, weight[i], value[i])
+
+    # print("PlaceHolder 1C")
+    # return 0, 0, 0, 0
 
 # Hashing function to return the key for every value.
 def Hashing(keyvalue):
@@ -319,10 +355,13 @@ class item:
         self.itemNumber = num
         self.itemValue = value
         self.itemWeight = weight
+        self.itemNext = None
     def get_data(self):
         return self.itemNumber, self.itemValue, self.itemWeight
     def get_itemRatio(self):
         return self.itemValue / self.itemWeight
+    def get_next(self):
+        return self.itemNext
 
 
 

@@ -24,7 +24,8 @@ def main():
     # task1B(sackCapacity, weightList, valueList, listSize)
     # task1C(sackCapacity, weightList, valueList, listSize)
     task2A(sackCapacity, weightList, valueList, listSize)
-    # task2B(sackCapacity, weightList, valueList, listSize)
+    task2B(sackCapacity, weightList, valueList, listSize)
+
 
 def task1A(sackCapacity, weightList, valueList, listSize):
     
@@ -199,28 +200,31 @@ def memFuncIndexes(listSize, sackCapacity):
     itemIndexes.reverse()
     return itemIndexes
 
+
+#Global Variable for spaceEfficientKnapSack
+HashTable = [[] for _ in range(10)]
+
 def spaceEfficientKnapSack(capacity, weight, value, size):
-    # Global variable for hash table.
-    HashTable = [[] for i in range(capacity)]
-    print("Capacity size: ", capacity)
-    # Keep track of our number of operations.
+    # Variables
     numOps = 0
 
-    # Insert values into hash table.
-    # for i in range(capacity - 1):
-    #     #print("Value: ", value[i])
-    #     hash_key = spaceEfficientHelper(weight[i], HashTable)
-    #     HashTable[hash_key].append(value[i])
-
-    # for i in range(capacity - 1):
-    #     print(HashTable[i])
-
+    # Implement hash table with values.
+    for i in range(capacity - 1):
+        insert(HashTable, weight[i], value[i])
+    
 
     print("PlaceHolder 1C")
     return 0, 0, 0, 0
 
-def spaceEfficientHelper(keyvalue, HashTable):
+# Hashing function to return the key for every value.
+def Hashing(keyvalue):
     return keyvalue % len(HashTable)
+
+# Insert Function to add values to the hash table
+def insert(Hashtable, keyvalue, value):
+    hash_key = Hashing(keyvalue)
+    Hashtable[hash_key].append(value)
+
 
 def greedyApproach(capacityVal, weightSet, valueSet, sizeVal):
     #zip is a python function that combines two arrays
@@ -289,7 +293,73 @@ def greedyMergeSortA(valToWeightArray, indexArray):
 
 def heapBased(capacity, weight, value, size):
     print("PlaceHolder 2B")
-    return 0, 0, 0
+    objectArr = []
+    for index in range(size):
+        tempItem = item(index + 1, value[index], weight[index])
+        objectArr.append(tempItem)
+
+    build_max_heap(objectArr)
+    tempValue = stopIndex = 0
+    tempWeight = capacity
+
+    for i in range(size):
+        currentWT = objectArr[i].get_data()[2]
+        currentValue = objectArr[i].get_data()[1]
+        if tempWeight - currentWT >= 0:
+            tempWeight = tempWeight - currentWT
+            tempValue = tempValue + currentValue
+            stopIndex = i
+        else:
+            break 
+    returnArray = []
+    for i in range(stopIndex + 1):
+        returnArray.append(objectArr[i].get_data()[0])
+    return tempValue, returnArray, 0
+
+class item:
+    "This is an item class"
+    def __init__(self, num, value, weight):
+        self.itemNumber = num
+        self.itemValue = value
+        self.itemWeight = weight
+    def get_data(self):
+        return self.itemNumber, self.itemValue, self.itemWeight
+    def get_itemRatio(self):
+        return self.itemValue / self.itemWeight
+
+
+
+def max_heapify(A,k):
+    l = left(k)
+    r = right(k)
+
+    if l < len(A) and A[l].get_itemRatio() > A[k].get_itemRatio():
+        largest = l
+    else:
+        largest = k
+        
+    if r < len(A) and A[r].get_itemRatio() > A[largest].get_itemRatio():
+        largest = r
+    if largest != k:
+        A[k], A[largest] = A[largest], A[k]
+        max_heapify(A, largest)
+
+def left(k):
+    return 2 * k + 1
+
+def right(i):
+    return 2 * i + 2
+
+def build_max_heap(A):
+    n = int((len(A)//2)-1)
+    for k in range(n, -1, -1):
+        max_heapify(A,k)
+
+
+
+
+
+
 
 
 if __name__ == "__main__":
